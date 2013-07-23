@@ -17,12 +17,13 @@ function shimmer(options) {
 
 function wrap(nodule, name, wrapper) {
   if (!nodule || !nodule[name]) {
-    logger("no original function to wrap");
+    logger("no original function " + name + " to wrap");
     return;
   }
 
   if (!wrapper) {
     logger("no wrapper function");
+    logger((new Error()).stack);
     return;
   }
 
@@ -45,14 +46,36 @@ function wrap(nodule, name, wrapper) {
   return wrapped;
 }
 
+function massWrap(nodules, names, wrapper) {
+  if (!nodules) {
+    logger("must provide one or more modules to patch");
+    logger((new Error()).stack);
+    return;
+  } else if (!Array.isArray(nodules)) {
+    nodules = [nodules];
+  }
+
+  if (!(names && Array.isArray(names))) {
+    logger("must provide one or more functions to wrap on modules");
+    return;
+  }
+
+  nodules.forEach(function (nodule) {
+    names.forEach(function (name) {
+      wrap(nodule, name, wrapper);
+    });
+  });
+}
+
 function unwrap(nodule, name) {
   if (!nodule || !nodule[name]) {
     logger("no function to unwrap.");
+    logger((new Error()).stack);
     return;
   }
 
   if (!nodule[name].__unwrap) {
-    logger("no original to unwrap to -- has this already been unwrapped?");
+    logger("no original to unwrap to -- has " + name + " already been unwrapped?");
   }
   else {
     return nodule[name].__unwrap();
@@ -60,6 +83,7 @@ function unwrap(nodule, name) {
 }
 
 shimmer.wrap = wrap;
+shimmer.massWrap = massWrap;
 shimmer.unwrap = unwrap;
 
 module.exports = shimmer;

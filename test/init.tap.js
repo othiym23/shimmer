@@ -13,7 +13,7 @@ test("shimmer initialization", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("no original function to wrap")
+                  .withArgs("no original function undefined to wrap")
                   .once();
 
   t.doesNotThrow(function () {

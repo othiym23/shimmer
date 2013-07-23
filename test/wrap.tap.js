@@ -41,7 +41,7 @@ test("wrap called with no arguments", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("no original function to wrap")
+                  .withExactArgs("no original function undefined to wrap")
                   .once();
   shimmer({logger : mock});
 
@@ -59,7 +59,7 @@ test("wrap called with module but nothing else", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("no original function to wrap")
+                  .withExactArgs("no original function undefined to wrap")
                   .once();
   shimmer({logger : mock});
 
@@ -77,8 +77,7 @@ test("wrap called with original but no wrapper", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("no wrapper function")
-                  .once();
+                  .twice();
   shimmer({logger : mock});
 
   t.doesNotThrow(function () {
@@ -95,7 +94,7 @@ test("wrap called with non-function original", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("original object and wrapper must be functions")
+                  .withExactArgs("original object and wrapper must be functions")
                   .once();
   shimmer({logger : mock});
 

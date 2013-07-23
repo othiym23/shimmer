@@ -46,7 +46,7 @@ test("shouldn't throw on double unwrapping", function (t) {
   var mock = sinon.expectation
                   .create('logger')
                   .withArgs("no original to unwrap to -- " +
-                            "has this already been unwrapped?")
+                            "has inc already been unwrapped?")
                   .once();
   shimmer({logger : mock});
 
@@ -76,8 +76,7 @@ test("unwrap called with no arguments", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("no function to unwrap.")
-                  .once();
+                  .twice();
   shimmer({logger : mock});
 
   t.doesNotThrow(function () { shimmer.unwrap(); }, "should log instead of throwing");
@@ -92,8 +91,7 @@ test("unwrap called with module but no name", function (t) {
 
   var mock = sinon.expectation
                   .create('logger')
-                  .withArgs("no function to unwrap.")
-                  .once();
+                  .twice();
   shimmer({logger : mock});
 
   t.doesNotThrow(function () { shimmer.unwrap({}); }, "should log instead of throwing");
