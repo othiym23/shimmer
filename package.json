@@ -1,6 +1,6 @@
 {
   "name": "shimmer",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Safe(r) monkeypatching for JavaScript.",
   "main": "index.js",
   "scripts": {
