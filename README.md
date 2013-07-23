@@ -57,6 +57,12 @@ If you *aren't* discarding the original, remember these tips:
   Today's null-returning callback is tomorrow's error-code returning callback.
 * Don't make an asynchronous function synchronous and vice versa.
 
+#### shimmer.massWrap(nodules, names, wrapper)
+
+Just like `wrap`, with the addition that you can wrap multiple methods on
+multiple modules. Note that this function expects the list of functions to be
+monkeypatched on all of the modules to be the same.
+
 #### shimmer.unwrap(nodule, name)
 
 A convenience function for restoring the function back the way it was before
