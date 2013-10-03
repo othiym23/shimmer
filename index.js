@@ -36,6 +36,7 @@ function wrap(nodule, name, wrapper) {
     , wrapped = wrapper(original)
     ;
 
+  wrapped.__original = original;
   wrapped.__unwrap = function () {
     if (nodule[name] === wrapped) nodule[name] = original;
   };

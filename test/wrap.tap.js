@@ -14,10 +14,10 @@ var generator = {
 };
 
 test("should wrap safely", function (t) {
-  t.plan(6);
+  t.plan(8);
 
-  t.equal(counter, generator.inc, "basic function equality testing should work");
-  t.doesNotThrow(function () { generator.inc(); });
+  t.equal(counter, generator.inc, "method is mapped to function");
+  t.doesNotThrow(function () { generator.inc(); }, "original funciton works");
   t.equal(1, outsider, "calls have side effects");
 
   var count = 0;
@@ -31,7 +31,9 @@ test("should wrap safely", function (t) {
   }
   shimmer.wrap(generator, 'inc', wrapper);
 
-  t.doesNotThrow(function () { generator.inc(); });
+  t.ok(generator.inc.__wrapped, "function tells us it's wrapped");
+  t.equal(generator.inc.__original, counter, "original function is available");
+  t.doesNotThrow(function () { generator.inc(); }, "wrapping works");
   t.equal(2, count, "both pre and post increments should have happened");
   t.equal(2, outsider, "original function has still been called");
 });
