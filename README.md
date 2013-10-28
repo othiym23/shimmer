@@ -69,3 +69,13 @@ A convenience function for restoring the function back the way it was before
 you started. Won't unwrap if somebody else has monkeypatched the function after
 you (but will log in that case). Won't throw if you try to double-unwrap a
 function (but will log).
+
+#### shimmer.wrapEmitter(emitter, mark, prepare)
+
+Change how an individual EventEmitter runs its listeners. Each listener
+will be passed to `mark`, and `wrapEmitter` assumes that whatever changes are
+made happen either on the listener itself or somewhere else. When emit is
+called, all of the listeners for the event type will be passed to `prepare`,
+which should return the list of prepared listeners. The wrapped EE can be
+restored to its pristine state by using emitter.__unwrap(), but this should
+only be used if you *really* know what you're doing.
