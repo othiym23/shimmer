@@ -11,7 +11,7 @@ test("bindEmitter", function (t) {
     t.plan(2);
 
     shimmer({logger : function (message) {
-      t.equal(message, 'can only bind real EEs', "got expected message");
+      t.equal(message, 'can only wrap real EEs', "got expected message");
     }});
 
     t.doesNotThrow(function () { shimmer.wrapEmitter(); }, "fails safely");
@@ -21,7 +21,7 @@ test("bindEmitter", function (t) {
     t.plan(2);
 
     shimmer({logger : function (message) {
-      t.equal(message, 'must pass marker function to wrap emitter',
+      t.equal(message, 'must have function to run when adding a new listener',
               "got expected message");
     }});
 
@@ -34,7 +34,7 @@ test("bindEmitter", function (t) {
     t.plan(2);
 
     shimmer({logger : function (message) {
-      t.equal(message, 'must pass preparation function to wrap emitter',
+      t.equal(message, 'must have function to wrap listeners when emitting',
               "got expected message");
     }});
 
