@@ -72,10 +72,14 @@ function (but will log).
 
 #### shimmer.wrapEmitter(emitter, mark, prepare)
 
-Change how an individual EventEmitter runs its listeners. Each listener
-will be passed to `mark`, and `wrapEmitter` assumes that whatever changes are
-made happen either on the listener itself or somewhere else. When emit is
-called, all of the listeners for the event type will be passed to `prepare`,
-which should return the list of prepared listeners. The wrapped EE can be
-restored to its pristine state by using emitter.__unwrap(), but this should
-only be used if you *really* know what you're doing.
+Wrap an EventEmitter's event listeners. Each listener will be passed to
+`mark` when it is registered with `.addListener()` or `.on()`, and then
+each listener is passed to `prepare` to be wrapped before it's called
+by the `.emit()` call. `wrapListener` deals with the single listener
+vs array of listeners logic, and also ensures that edge cases like
+`.removeListener()` being called from within an `.emit()` for the same
+event type is handled properly.
+
+The wrapped EE can be restored to its pristine state by using
+emitter.__unwrap(), but this should only be used if you *really* know
+what you're doing.

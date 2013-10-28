@@ -124,6 +124,22 @@ function wrapEmitter(emitter, mark, prepare) {
 
       var unwrapped = this._events[event];
 
+      function wrapListeners(unwrapped) {
+        if (!unwrapped) return;
+
+        var wrapped = unwrapped;
+        if (typeof unwrapped === 'function') {
+          wrapped = prepare(unwrapped);
+        }
+        else if (Array.isArray(unwrapped)) {
+          wrapped = [];
+          for (var i = 0; i < unwrapped.length; i++) {
+            wrapped[i] = prepare(unwrapped[i]);
+          }
+        }
+        return wrapped;
+      }
+
       /* Ensure that if removeListener gets called, it's working with the
        * unwrapped listeners.
        */
@@ -135,7 +151,7 @@ function wrapEmitter(emitter, mark, prepare) {
           }
           finally {
             unwrapped = this._events[event];
-            this._events[event] = prepare(unwrapped);
+            this._events[event] = wrapListeners(unwrapped);
           }
         };
       }
@@ -146,7 +162,7 @@ function wrapEmitter(emitter, mark, prepare) {
          * still work while at the same time running whatever hooks are necessary to
          * make sure the listener is run in the correct context.
          */
-        this._events[event] = prepare(unwrapped);
+        this._events[event] = wrapListeners(unwrapped);
         return emit.apply(this, arguments);
       }
       finally {
@@ -164,9 +180,9 @@ function wrapEmitter(emitter, mark, prepare) {
   wrap(emitter, 'emit',        puncher);
 
   emitter.__unwrap = function () {
-    if (emitter.addListener.__unwrap) emitter.addListener.__unwrap();
-    if (emitter.on.__unwrap) emitter.on.__unwrap();
-    if (emitter.emit.__unwrap) emitter.emit.__unwrap();
+    unwrap(emitter, 'addListener');
+    unwrap(emitter, 'on');
+    unwrap(emitter, 'emit');
     delete emitter.__wrapped;
   };
   emitter.__wrapped = true;

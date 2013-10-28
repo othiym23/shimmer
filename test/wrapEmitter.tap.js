@@ -71,7 +71,7 @@ test("bindEmitter", function (t) {
   });
 
   t.test("when a listener removes another listener", function (t) {
-    t.plan(6);
+    t.plan(4);
 
     shimmer({logger : function (message) {
       t.fail(message);
@@ -88,17 +88,7 @@ test("bindEmitter", function (t) {
         return handler.apply(this, arguments);
       };
     }
-    function prepare(unwrapped) {
-      t.ok(Array.isArray(unwrapped), "have a list of handlers");
-      var replacements = [];
-
-      for (var i = 0; i < unwrapped.length; i++) {
-        replacements[i] = wrap(unwrapped[i]);
-      }
-
-      return replacements;
-    }
-    shimmer.wrapEmitter(ee, nop, prepare);
+    shimmer.wrapEmitter(ee, nop, wrap);
 
     ee.on('listen', listener1);
     ee.on('listen', listener2);
