@@ -84,11 +84,8 @@ function unwrap(nodule, name) {
 }
 
 function wrapEmitter(emitter, onAddListener, onEmit) {
-  if (!emitter ||
-      !emitter.on ||
-      !emitter.addListener ||
-      !emitter.removeListener ||
-      !emitter.emit) {
+  if (!emitter || !emitter.on || !emitter.addListener ||
+      !emitter.removeListener || !emitter.emit) {
     logger("can only wrap real EEs");
     return;
   }
@@ -103,13 +100,25 @@ function wrapEmitter(emitter, onAddListener, onEmit) {
     return;
   }
 
+  // dunderscores are boring
+  var SYMBOL = 'wrap@before';
+
   /* Attach a context to a listener, and make sure that this hook stays
    * attached to the emitter forevermore.
    */
   function adding(on) {
     return function added(event, listener) {
       // set up the listener so that onEmit can do whatever it needs
-      onAddListener(listener);
+      var before = this[SYMBOL];
+      if (typeof before === 'function') {
+        before(listener);
+      }
+      else if (Array.isArray(before)) {
+        var length = before.length;
+        for (var i = 0; i < length; i++) {
+          before[i](listener);
+        }
+      }
 
       try {
         return on.call(this, event, listener);
@@ -179,17 +188,32 @@ function wrapEmitter(emitter, onAddListener, onEmit) {
     };
   }
 
-  wrap(emitter, 'addListener', adding);
-  wrap(emitter, 'on',          adding);
-  wrap(emitter, 'emit',        emitting);
+  // support multiple onAddListeners
+  if (!emitter[SYMBOL]) {
+    emitter[SYMBOL] = onAddListener;
+  }
+  else if (typeof emitter[SYMBOL] === 'function') {
+    emitter[SYMBOL] = [emitter[SYMBOL], onAddListener];
+  }
+  else if (Array.isArray(emitter[SYMBOL])) {
+    emitter[SYMBOL].push(onAddListener);
+  }
 
-  emitter.__unwrap = function () {
-    unwrap(emitter, 'addListener');
-    unwrap(emitter, 'on');
-    unwrap(emitter, 'emit');
-    delete emitter.__wrapped;
-  };
-  emitter.__wrapped = true;
+  // only wrap the core functions once
+  if (!emitter.__wrapped) {
+    wrap(emitter, 'addListener', adding);
+    wrap(emitter, 'on',          adding);
+    wrap(emitter, 'emit',        emitting);
+
+    emitter.__unwrap = function () {
+      unwrap(emitter, 'addListener');
+      unwrap(emitter, 'on');
+      unwrap(emitter, 'emit');
+      delete emitter[SYMBOL];
+      delete emitter.__wrapped;
+    };
+    emitter.__wrapped = true;
+  }
 }
 
 shimmer.wrap = wrap;

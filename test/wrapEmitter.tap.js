@@ -5,7 +5,7 @@ var shimmer = require('../index.js');
 var Emitter = require('events').EventEmitter;
 
 test("bindEmitter", function (t) {
-  t.plan(7);
+  t.plan(8);
 
   t.test("with no parameters", function (t) {
     t.plan(2);
@@ -158,5 +158,40 @@ test("bindEmitter", function (t) {
     t.notOk(ee.on.__wrapped, "on is unwrapped");
     t.notOk(ee.emit.__wrapped, "emit is unwrapped");
     t.notOk(ee.removeListener.__wrapped, "removeListener is unwrapped");
+  });
+
+  t.test("when wrapping the same emitter multiple times", function (t) {
+    t.plan(6);
+
+    shimmer({logger : function (message) {
+      t.fail(message);
+      t.end();
+    }});
+
+    var ee = new Emitter();
+    var values = [];
+    shimmer.wrapEmitter(
+      ee,
+      function marker() { values.push(1); },
+      function passthrough(handler) { return handler; }
+    );
+
+    shimmer.wrapEmitter(
+      ee,
+      function marker() { values.push(2); },
+      function passthrough(handler) { return handler; }
+    );
+
+    ee.on('test', function (value) {
+      t.equal(value, 31, "got expected value");
+      t.deepEqual(values, [1, 2], "both marker functions were called");
+    });
+
+    t.ok(ee.addListener.__wrapped, "addListener is wrapped");
+    t.ok(ee.on.__wrapped, "on is wrapped");
+    t.ok(ee.emit.__wrapped, "emit is wrapped");
+    t.notOk(ee.removeListener.__wrapped, "removeListener is not wrapped");
+
+    ee.emit('test', 31);
   });
 });
