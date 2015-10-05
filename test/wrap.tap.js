@@ -14,14 +14,15 @@ var generator = {
 };
 
 test("should wrap safely", function (t) {
-  t.plan(8);
+  t.plan(9);
 
   t.equal(counter, generator.inc, "method is mapped to function");
   t.doesNotThrow(function () { generator.inc(); }, "original funciton works");
   t.equal(1, outsider, "calls have side effects");
 
   var count = 0;
-  function wrapper(original) {
+  function wrapper(original, name) {
+    t.equal(name, 'inc')
     return function () {
       count++;
       var returned = original.apply(this, arguments);

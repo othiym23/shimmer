@@ -33,7 +33,7 @@ function wrap(nodule, name, wrapper) {
   }
 
   var original = nodule[name]
-    , wrapped = wrapper(original)
+    , wrapped = wrapper(original, name)
     ;
 
   wrapped.__original = original;
