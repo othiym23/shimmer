@@ -19,9 +19,9 @@
     "shim"
   ],
   "author": "Forrest L Norvell <ogd@aoaioxxysz.net>",
-  "license": "BSD 2-Clause",
+  "license": "BSD-2-Clause",
   "devDependencies": {
-    "tap": "~0.4.3",
-    "sinon": "~1.7.2"
+    "sinon": "^1.17.2",
+    "tap": "~0.4.3"
   }
 }
