@@ -22,6 +22,6 @@
   "license": "BSD-2-Clause",
   "devDependencies": {
     "sinon": "^1.17.2",
-    "tap": "~0.4.3"
+    "tap": "^2.2.0"
   }
 }
