@@ -19,7 +19,7 @@
     "shim"
   ],
   "author": "Forrest L Norvell <ogd@aoaioxxysz.net>",
-  "license": "BSD",
+  "license": "BSD 2-Clause",
   "devDependencies": {
     "tap": "~0.4.3",
     "sinon": "~1.7.2"
