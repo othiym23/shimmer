@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/othiym23/shimmer.svg)](https://travis-ci.org/othiym23/shimmer)
+[![Coverage Status](https://coveralls.io/repos/othiym23/shimmer/badge.svg?branch=master)](https://coveralls.io/r/othiym23/shimmer?branch=master)
+
 ## Safer monkeypatching for Node.js
 
 `shimmer` does a bunch of the work necessary to wrap other methods in

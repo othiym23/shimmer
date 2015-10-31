@@ -4,7 +4,7 @@
   "description": "Safe(r) monkeypatching for JavaScript.",
   "main": "index.js",
   "scripts": {
-    "test": "standard && tap test/*.tap.js"
+    "test": "standard && tap test/*.tap.js --coverage"
   },
   "repository": {
     "type": "git",
