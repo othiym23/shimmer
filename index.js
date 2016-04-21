@@ -1,7 +1,7 @@
 'use strict'
 
 function isFunction (funktion) {
-  return funktion && {}.toString.call(funktion) === '[object Function]'
+  return funktion && /\[object (Generator)?Function\]/.test({}.toString.call(funktion))
 }
 
 // Default to complaining loudly when things don't go according to plan.
