@@ -92,8 +92,30 @@ function unwrap (nodule, name) {
   }
 }
 
+function massUnwrap (nodules, names) {
+  if (!nodules) {
+    logger('must provide one or more modules to patch')
+    logger((new Error()).stack)
+    return
+  } else if (!Array.isArray(nodules)) {
+    nodules = [nodules]
+  }
+
+  if (!(names && Array.isArray(names))) {
+    logger('must provide one or more functions to unwrap on modules')
+    return
+  }
+
+  nodules.forEach(function (nodule) {
+    names.forEach(function (name) {
+      unwrap(nodule, name)
+    })
+  })
+}
+
 shimmer.wrap = wrap
 shimmer.massWrap = massWrap
 shimmer.unwrap = unwrap
+shimmer.massUnwrap = massUnwrap
 
 module.exports = shimmer

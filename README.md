@@ -72,3 +72,9 @@ A convenience function for restoring the function back the way it was before
 you started. Won't unwrap if somebody else has monkeypatched the function after
 you (but will log in that case). Won't throw if you try to double-unwrap a
 function (but will log).
+
+#### shimmer.massUnwrap(nodules, names)
+
+Just like `unwrap`, with the addition that you can unwrap multiple methods on
+multiple modules. Note that this function expects the list of functions to be
+unwrapped on all of the modules to be the same.
