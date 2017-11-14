@@ -7,13 +7,20 @@ var shimmer = require('../index.js')
 
 var outsider = 0
 function counter () { return ++outsider }
+function anticounter () { return --outsider }
 
 var generator = {
   inc: counter
 }
+Object.defineProperty(generator, 'dec', {
+  value: anticounter,
+  writable: true,
+  configurable: true,
+  enumerable: false
+})
 
 test('should wrap safely', function (t) {
-  t.plan(9)
+  t.plan(11)
 
   t.equal(counter, generator.inc, 'method is mapped to function')
   t.doesNotThrow(function () { generator.inc() }, 'original function works')
@@ -36,6 +43,17 @@ test('should wrap safely', function (t) {
   t.doesNotThrow(function () { generator.inc() }, 'wrapping works')
   t.equal(2, count, 'both pre and post increments should have happened')
   t.equal(2, outsider, 'original function has still been called')
+  t.ok(generator.propertyIsEnumerable('inc'),
+    'wrapped enumerable property is still enumerable')
+
+  shimmer.wrap(generator, 'dec', function (original) {
+    return function () {
+      return original.apply(this, arguments)
+    }
+  })
+
+  t.ok(!generator.propertyIsEnumerable('dec'),
+    'wrapped unenumerable property is still unenumerable')
 })
 
 test('wrap called with no arguments', function (t) {

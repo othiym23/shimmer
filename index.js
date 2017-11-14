@@ -37,11 +37,23 @@ function wrap (nodule, name, wrapper) {
 
   wrapped.__original = original
   wrapped.__unwrap = function () {
-    if (nodule[name] === wrapped) nodule[name] = original
+    if (nodule[name] === wrapped) {
+      Object.defineProperty(nodule, name, {
+        configurable: true,
+        enumerable: nodule.propertyIsEnumerable(name),
+        writable: true,
+        value: original
+      })
+    }
   }
   wrapped.__wrapped = true
 
-  nodule[name] = wrapped
+  Object.defineProperty(nodule, name, {
+    configurable: true,
+    enumerable: nodule.propertyIsEnumerable(name),
+    writable: true,
+    value: wrapped
+  })
 
   return wrapped
 }
