@@ -20,7 +20,7 @@ Object.defineProperty(generator, 'dec', {
 })
 
 test('should wrap safely', function (t) {
-  t.plan(11)
+  t.plan(12)
 
   t.equal(counter, generator.inc, 'method is mapped to function')
   t.doesNotThrow(function () { generator.inc() }, 'original function works')
@@ -45,6 +45,8 @@ test('should wrap safely', function (t) {
   t.equal(2, outsider, 'original function has still been called')
   t.ok(generator.propertyIsEnumerable('inc'),
     'wrapped enumerable property is still enumerable')
+  t.equal(Object.keys(generator.inc).length, 0,
+    'wrapped object has no additional properties')
 
   shimmer.wrap(generator, 'dec', function (original) {
     return function () {

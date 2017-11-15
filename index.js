@@ -7,6 +7,18 @@ function isFunction (funktion) {
 // Default to complaining loudly when things don't go according to plan.
 var logger = console.error.bind(console)
 
+// Sets a property on an object, preserving its enumerability.
+// This function assumes that the property is already writable.
+function defineProperty (obj, name, value) {
+  var enumerable = !!obj[name] && obj.propertyIsEnumerable(name)
+  Object.defineProperty(obj, name, {
+    configurable: true,
+    enumerable: enumerable,
+    writable: true,
+    value: value
+  })
+}
+
 // Keep initialization idempotent.
 function shimmer (options) {
   if (options && options.logger) {
@@ -35,26 +47,13 @@ function wrap (nodule, name, wrapper) {
   var original = nodule[name]
   var wrapped = wrapper(original, name)
 
-  wrapped.__original = original
-  wrapped.__unwrap = function () {
-    if (nodule[name] === wrapped) {
-      Object.defineProperty(nodule, name, {
-        configurable: true,
-        enumerable: nodule.propertyIsEnumerable(name),
-        writable: true,
-        value: original
-      })
-    }
-  }
-  wrapped.__wrapped = true
-
-  Object.defineProperty(nodule, name, {
-    configurable: true,
-    enumerable: nodule.propertyIsEnumerable(name),
-    writable: true,
-    value: wrapped
+  defineProperty(wrapped, '__original', original)
+  defineProperty(wrapped, '__unwrap', function () {
+    if (nodule[name] === wrapped) defineProperty(nodule, name, original)
   })
+  defineProperty(wrapped, '__wrapped', true)
 
+  defineProperty(nodule, name, wrapped)
   return wrapped
 }
 
