@@ -4,7 +4,7 @@
   "description": "Safe(r) monkeypatching for JavaScript.",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.tap.js --coverage"
+    "test": "standard && tap test/*.tap.js --coverage"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "license": "BSD-2-Clause",
   "devDependencies": {
     "sinon": "^1.17.2",
-    "standard": "^5.3.1",
+    "standard": "^10.0.3",
     "tap": "^2.2.0"
   }
 }
