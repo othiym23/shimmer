@@ -11,6 +11,12 @@ var logger = console.error.bind(console)
 // This function assumes that the property is already writable.
 function defineProperty (obj, name, value) {
   var enumerable = !!obj[name] && obj.propertyIsEnumerable(name)
+
+  if (obj.hasOwnProperty(name)) {
+    obj[name] = value
+    return
+  }
+
   Object.defineProperty(obj, name, {
     configurable: true,
     enumerable: enumerable,
