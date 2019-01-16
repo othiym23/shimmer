@@ -1,7 +1,7 @@
 'use strict'
 
 function isFunction (funktion) {
-  return funktion && {}.toString.call(funktion) === '[object Function]'
+  return funktion && ({}.toString.call(funktion) === '[object Function]' || {}.toString.call(funktion) === '[object AsyncFunction]' || {}.toString.call(funktion) === '[object GeneratorFunction]')
 }
 
 // Default to complaining loudly when things don't go according to plan.
