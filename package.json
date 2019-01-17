@@ -21,8 +21,8 @@
   "author": "Forrest L Norvell <ogd@aoaioxxysz.net>",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "sinon": "^1.17.2",
+    "sinon": "^7.2.2",
     "standard": "^10.0.3",
-    "tap": "^2.2.0"
+    "tap": "^12.1.1"
   }
 }
